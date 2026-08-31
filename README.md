@@ -4,13 +4,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
-An MCP (Model Context Protocol) server that gives Claude and other AI agents direct access to **DENUE**, INEGI's National Statistical Directory of Economic Units — over 5 million businesses and establishments across all of Mexico.
+An MCP (Model Context Protocol) server that gives Claude and other AI agents direct access to **INEGI's** open data: **DENUE** (the national directory of 5M+ businesses) and the **Banco de Indicadores** (official socioeconomic statistics — population, inflation, consumer confidence, industrial activity, and more), all across Mexico.
 
 ## Why
 
-DENUE is one of the richest open datasets in Mexico (identity, location, economic activity and size for millions of establishments), but using it means learning INEGI's REST API by hand. This server exposes it as four tools any MCP-compatible agent can call directly, so you can ask things like *"find hardware stores within 1km of these coordinates in Guadalajara"* or *"list bakeries registered in Oaxaca"* in plain language.
+INEGI's data is some of the richest open data in Mexico, but using it means learning two separate REST APIs by hand, each with their own quirks (DENUE's search methods; the Indicadores API's undocumented split between its "BISE" and "BIE-BISE" data banks, which this server resolves automatically). This server exposes both as plain-language tools any MCP-compatible agent can call directly — *"find hardware stores within 1km of these coordinates in Guadalajara"*, *"what's Mexico's inflation rate this month"*, *"population of Jalisco"*.
 
-Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of several Mexico City-only datasets. This one is scoped specifically to DENUE, at national level — any of the 32 states, or the whole country at once.
+Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of several Mexico City-only datasets. No MCP server previously existed for INEGI's Indicadores API. This one covers both, at national level — any of the 32 states, or the whole country at once.
 
 ## Tools
 
@@ -20,6 +20,7 @@ Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of sever
 | `denue_buscar_por_estado` | Search businesses by keyword within a specific state, or nationwide |
 | `denue_buscar_por_nombre` | Search businesses by commercial or legal name |
 | `denue_detalle` | Get the full record for a specific establishment by its DENUE id |
+| `inegi_indicador` | Get a socioeconomic indicator (population, inflation, consumer confidence, industrial activity, or any raw INEGI indicator code) nationally or by state, latest value or full history |
 
 State names are accepted in plain Spanish ("Jalisco", "Ciudad de Mexico") — no need to know INEGI's numeric codes.
 
@@ -39,6 +40,13 @@ Asking Claude *"find pharmacies in Jalisco"* calls `denue_buscar_por_estado` and
   Direccion: CALLE BASILIO BADILLO 344 EMILIANO ZAPATA 48380 PUERTO VALLARTA, Puerto Vallarta, JALISCO
   Telefono: N/D
   Coordenadas: 20.60264623, -105.23377801
+```
+
+Asking *"population of Jalisco"* calls `inegi_indicador` and returns the real INEGI figure:
+
+```
+Poblacion total (codigo 1002000001) — Jalisco:
+- 2020: 8,348,151
 ```
 
 ## Setup

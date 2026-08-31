@@ -4,6 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { buscarCercania, buscarPorEstado, buscarPorNombre, obtenerFicha, type Establecimiento } from "./denue.js";
 import { resolveEstadoCode } from "./estados.js";
+import { resolveIndicador, obtenerIndicador, INDICADORES_CATALOGO } from "./indicadores.js";
 
 const server = new McpServer({
   name: "denue-mcp",
@@ -96,6 +97,43 @@ server.registerTool(
   async ({ id }) => {
     const resultados = await obtenerFicha(id);
     return { content: [{ type: "text", text: resumen(resultados) }] };
+  }
+);
+
+server.registerTool(
+  "inegi_indicador",
+  {
+    title: "Consultar un indicador socioeconomico de INEGI",
+    description:
+      `Consulta indicadores socioeconomicos oficiales de INEGI (Banco de Indicadores): poblacion, inflacion, confianza del consumidor, actividad industrial, y mas, a nivel nacional o por estado. Indicadores conocidos por nombre: ${Object.keys(INDICADORES_CATALOGO).join(", ")}. Tambien acepta directamente un codigo numerico de indicador de INEGI para consultar cualquiera de su catalogo.`,
+    inputSchema: {
+      indicador: z.string().describe("Nombre del indicador (ej. 'poblacion', 'inflacion') o codigo numerico de INEGI"),
+      estado: z.string().default("nacional").describe("Nombre del estado (ej. 'Jalisco') o 'nacional' para todo el pais"),
+      historico: z.boolean().default(false).describe("Si es true, regresa toda la serie historica disponible en vez de solo el dato mas reciente"),
+    },
+  },
+  async ({ indicador, estado, historico }) => {
+    const catalogado = resolveIndicador(indicador);
+    const areaGeografica = estado.trim().toLowerCase() === "nacional" ? "00" : resolveEstadoCode(estado);
+    const observaciones = await obtenerIndicador(catalogado.codigo, areaGeografica, !historico, catalogado.banco);
+    if (observaciones.length === 0) {
+      return { content: [{ type: "text", text: `No se encontraron datos para "${indicador}" en "${estado}".` }] };
+    }
+    const LIMITE_HISTORICO = 24;
+    const truncado = observaciones.length > LIMITE_HISTORICO;
+    const mostrar = truncado ? observaciones.slice(0, LIMITE_HISTORICO) : observaciones;
+    const formatoValor = (v: string) => {
+      const num = Number(v);
+      return Number.isFinite(num) ? num.toLocaleString("es-MX", { maximumFractionDigits: 2 }) : v;
+    };
+    const lineas = [
+      `${catalogado.descripcion} (codigo ${catalogado.codigo}) — ${estado}:`,
+      ...mostrar.map((o) => `- ${o.periodo}: ${formatoValor(o.valor)}`),
+    ];
+    if (truncado) {
+      lineas.push(`... (${observaciones.length - LIMITE_HISTORICO} periodos mas omitidos, mostrando los ${LIMITE_HISTORICO} mas recientes)`);
+    }
+    return { content: [{ type: "text", text: lineas.join("\n") }] };
   }
 );
 

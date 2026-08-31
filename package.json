@@ -1,7 +1,7 @@
 {
   "name": "denue-mcp",
   "version": "1.0.0",
-  "description": "MCP server for INEGI's DENUE — search Mexico's national business directory (5M+ establishments) from Claude and other AI agents.",
+  "description": "MCP server for INEGI's open data — search Mexico's national business directory (DENUE, 5M+ establishments) and query official socioeconomic indicators (population, inflation, and more) from Claude and other AI agents.",
   "type": "module",
   "main": "build/index.js",
   "bin": {
@@ -24,6 +24,7 @@
     "model-context-protocol",
     "inegi",
     "denue",
+    "indicadores",
     "mexico",
     "claude",
     "ai-agents"
