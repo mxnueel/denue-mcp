@@ -6,6 +6,8 @@
 
 An MCP (Model Context Protocol) server that gives Claude and other AI agents direct access to **INEGI's** open data: **DENUE** (the national directory of 5M+ businesses) and the **Banco de Indicadores** (official socioeconomic statistics — population, inflation, consumer confidence, industrial activity, and more), all across Mexico.
 
+![Claude answering a real question using denue-mcp](docs/screenshot.png)
+
 ## Why
 
 INEGI's data is some of the richest open data in Mexico, but using it means learning two separate REST APIs by hand, each with their own quirks (DENUE's search methods; the Indicadores API's undocumented split between its "BISE" and "BIE-BISE" data banks, which this server resolves automatically). This server exposes both as plain-language tools any MCP-compatible agent can call directly — *"find hardware stores within 1km of these coordinates in Guadalajara"*, *"what's Mexico's inflation rate this month"*, *"population of Jalisco"*.
