@@ -19,6 +19,24 @@ Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of sever
 
 State names are accepted in plain Spanish ("Jalisco", "Ciudad de Mexico") — no need to know INEGI's numeric codes.
 
+## Example
+
+Asking Claude *"find pharmacies in Jalisco"* calls `denue_buscar_por_estado` and returns real DENUE records:
+
+```
+- PV ARCOS LUROLA (id: 1963523)
+  Actividad: Farmacias sin minisúper
+  Direccion: CALLE MORELOS 291 CENTRO 48300 PUERTO VALLARTA, Puerto Vallarta, JALISCO
+  Telefono: N/D
+  Coordenadas: 20.60831764, -105.23612503
+
+- PV INSUERGENTES LUROLA (id: 1963298)
+  Actividad: Farmacias sin minisúper
+  Direccion: CALLE BASILIO BADILLO 344 EMILIANO ZAPATA 48380 PUERTO VALLARTA, Puerto Vallarta, JALISCO
+  Telefono: N/D
+  Coordenadas: 20.60264623, -105.23377801
+```
+
 ## Setup
 
 1. **Get a free DENUE API token** — register at [inegi.org.mx/servicios/api_denue.html](https://www.inegi.org.mx/servicios/api_denue.html).
@@ -44,7 +62,7 @@ State names are accepted in plain Spanish ("Jalisco", "Ciudad de Mexico") — no
 
 ## Status
 
-Core MCP protocol flow (initialize, tool listing, tool invocation, error handling) is implemented and tested. The exact request/response shape against INEGI's live API is pending end-to-end verification with a real token (INEGI's endpoint blocks unauthenticated/scripted probing, so this needs a registered token to confirm) — if you hit a parsing issue, please open an issue with the raw error.
+All four tools have been tested end-to-end against the live DENUE API (MCP protocol handshake, tool listing, real invocations with results, and error handling with a missing/invalid token) and return real, correctly-parsed establishment data.
 
 ## License
 

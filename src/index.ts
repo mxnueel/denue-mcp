@@ -16,10 +16,11 @@ function resumen(establecimientos: Establecimiento[]): string {
   }
   return establecimientos
     .map((e) => {
-      const direccion = [e.Tipo_vialidad, e.Calle, e.Num_Exterior, e.Colonia, e.Municipio, e.Entidad]
+      const ubicacion = e.Ubicacion.replace(/\s+/g, " ").trim();
+      const direccion = [e.Tipo_vialidad, e.Calle, e.Num_Exterior, e.Colonia, e.CP, ubicacion]
         .filter(Boolean)
         .join(" ");
-      return `- ${e.Nombre} (id: ${e.Id})\n  Actividad: ${e.Clase_actividad}\n  Direccion: ${direccion}\n  Telefono: ${e.Telefono || "N/D"}\n  Coordenadas: ${e.Latitud}, ${e.Longitud}`;
+      return `- ${e.Nombre.trim()} (id: ${e.Id})\n  Actividad: ${e.Clase_actividad}\n  Direccion: ${direccion}\n  Telefono: ${e.Telefono || "N/D"}\n  Coordenadas: ${e.Latitud}, ${e.Longitud}`;
     })
     .join("\n\n");
 }

@@ -1,6 +1,7 @@
 const BASE_URL = "https://www.inegi.org.mx/app/api/denue/v1/consulta";
 
 export interface Establecimiento {
+  CLEE: string;
   Id: string;
   Nombre: string;
   Razon_social: string;
@@ -12,10 +13,8 @@ export interface Establecimiento {
   Num_Interior: string;
   Colonia: string;
   CP: string;
+  /** Localidad, municipio y estado juntos en un solo string, ej. "GUADALAJARA   , Guadalajara, JALISCO" */
   Ubicacion: string;
-  Municipio: string;
-  Localidad: string;
-  Entidad: string;
   Telefono: string;
   Correo_e: string;
   Sitio_internet: string;
