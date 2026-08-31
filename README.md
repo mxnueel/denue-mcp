@@ -1,5 +1,9 @@
 # denue-mcp
 
+[![CI](https://github.com/mxnueel/denue-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/mxnueel/denue-mcp/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
+
 An MCP (Model Context Protocol) server that gives Claude and other AI agents direct access to **DENUE**, INEGI's National Statistical Directory of Economic Units — over 5 million businesses and establishments across all of Mexico.
 
 ## Why
@@ -47,7 +51,14 @@ Asking Claude *"find pharmacies in Jalisco"* calls `denue_buscar_por_estado` and
    npm install
    npm run build
    ```
-3. Add it to your MCP client config (e.g. `claude_desktop_config.json` or Claude Code's `.mcp.json`):
+3. Register it with your MCP client.
+
+   **Claude Code (CLI):**
+   ```bash
+   claude mcp add denue -s user -e INEGI_DENUE_TOKEN=your-token-here -- node /absolute/path/to/denue-mcp/build/index.js
+   ```
+
+   **Claude Desktop** (or any client using a `mcpServers` JSON config, e.g. `claude_desktop_config.json`):
    ```json
    {
      "mcpServers": {
@@ -60,10 +71,24 @@ Asking Claude *"find pharmacies in Jalisco"* calls `denue_buscar_por_estado` and
    }
    ```
 
+4. Ask your agent something like *"find pharmacies in Jalisco"* or *"what businesses are near 20.6597, -103.3496?"*
+
+## Testing
+
+```bash
+npm test
+```
+
+Runs the full build and the test suite (`node --test`) — covers state-name resolution (`estados.ts`) and the missing-token error path for every DENUE call. CI runs this on every push against Node 18, 20, and 22.
+
+## Contributing
+
+Issues and PRs welcome — especially reports of DENUE response shapes this hasn't been tested against yet (different methods return slightly different field sets). Fork, branch, `npm test`, and open a PR.
+
 ## Status
 
 All four tools have been tested end-to-end against the live DENUE API (MCP protocol handshake, tool listing, real invocations with results, and error handling with a missing/invalid token) and return real, correctly-parsed establishment data.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).

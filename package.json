@@ -13,7 +13,11 @@
   "scripts": {
     "build": "tsc && chmod +x build/index.js",
     "start": "node build/index.js",
+    "test": "npm run build && node --test build/*.test.js",
     "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "mcp",
@@ -28,8 +32,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mxnueel/denue-mcp"
+    "url": "git+https://github.com/mxnueel/denue-mcp.git"
   },
+  "bugs": {
+    "url": "https://github.com/mxnueel/denue-mcp/issues"
+  },
+  "homepage": "https://github.com/mxnueel/denue-mcp#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "zod": "^4.5.4"
