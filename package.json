@@ -1,0 +1,41 @@
+{
+  "name": "denue-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for INEGI's DENUE — search Mexico's national business directory (5M+ establishments) from Claude and other AI agents.",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "denue-mcp": "build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "start": "node build/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "inegi",
+    "denue",
+    "mexico",
+    "claude",
+    "ai-agents"
+  ],
+  "author": "Manuel Bautista",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxnueel/denue-mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2"
+  }
+}
