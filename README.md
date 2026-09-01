@@ -4,15 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
-An MCP (Model Context Protocol) server that gives Claude and other AI agents direct access to **INEGI's** open data: **DENUE** (the national directory of 5M+ businesses) and the **Banco de Indicadores** (official socioeconomic statistics — population, inflation, consumer confidence, industrial activity, and more), all across Mexico.
+MCP server for INEGI's **DENUE** (5M+ Mexican businesses) and **Banco de Indicadores** (population, inflation, consumer confidence, industrial activity) — query both in plain language from Claude or any MCP-compatible agent.
 
-![Claude answering a real question using denue-mcp](docs/screenshot.png)
+I built this because a client project needed to look up real Mexican business data from an agent, and INEGI only ships DENUE and Indicadores as two separate REST APIs — each with its own undocumented quirks. The one that actually bit me: Indicadores silently splits every code across two data banks, `BISE` and `BIE-BISE`, and asking the wrong one doesn't 404 — it returns `ErrorCode:100` with no hint which bank you should've used. `obtenerIndicador()` in [`src/indicadores.ts`](src/indicadores.ts) just tries one bank, and on `ErrorCode:100` retries with the other before giving up — so the agent never has to know banks exist.
 
-## Why
+![Claude calling denue_buscar_por_estado and returning real DENUE records for pharmacies in Jalisco](docs/demo.gif)
 
-INEGI's data is some of the richest open data in Mexico, but using it means learning two separate REST APIs by hand, each with their own quirks (DENUE's search methods; the Indicadores API's undocumented split between its "BISE" and "BIE-BISE" data banks, which this server resolves automatically). This server exposes both as plain-language tools any MCP-compatible agent can call directly — *"find hardware stores within 1km of these coordinates in Guadalajara"*, *"what's Mexico's inflation rate this month"*, *"population of Jalisco"*.
+*(Real query and response, replayed from the [`README example`](#example) below. Source in [`docs/demo-src`](docs/demo-src), rendered with [HyperFrames](https://github.com/heygen-com/hyperframes) — `cd docs/demo-src && npm run render`.)*
 
-Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of several Mexico City-only datasets. No MCP server previously existed for INEGI's Indicadores API. This one covers both, at national level — any of the 32 states, or the whole country at once.
+Existing MCP integrations with DENUE (e.g. `cdmx-mcp`) bundle it as one of several Mexico City-only datasets. No MCP server previously existed for INEGI's Indicadores API — this one covers both, at national level, across any of the 32 states or the whole country at once.
 
 ## Tools
 
@@ -94,10 +94,6 @@ Runs the full build and the test suite (`node --test`) — covers state-name res
 ## Contributing
 
 Issues and PRs welcome — especially reports of DENUE response shapes this hasn't been tested against yet (different methods return slightly different field sets). Fork, branch, `npm test`, and open a PR.
-
-## Status
-
-All four tools have been tested end-to-end against the live DENUE API (MCP protocol handshake, tool listing, real invocations with results, and error handling with a missing/invalid token) and return real, correctly-parsed establishment data.
 
 ## License
 

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=960, height=540" />
+    <title>denue-mcp demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        background: #05070a;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      #root {
+        position: relative;
+        width: 960px;
+        height: 540px;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+      }
+      #card {
+        width: 860px;
+        height: 460px;
+        border-radius: 14px;
+        background: #14171c;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform-origin: center;
+      }
+      #titlebar {
+        height: 40px;
+        flex: 0 0 40px;
+        background: #1c1f26;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 8px;
+        box-sizing: border-box;
+      }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot.red { background: #ff5f57; }
+      .dot.yellow { background: #febc2e; }
+      .dot.green { background: #28c840; }
+      #titletext {
+        margin-left: 10px;
+        color: #8b93a1;
+        font-size: 13px;
+      }
+      #body {
+        flex: 1;
+        padding: 22px 26px;
+        box-sizing: border-box;
+        color: #d7dce2;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .line { opacity: 0; white-space: pre-wrap; }
+      .prompt { color: #f2f4f7; }
+      .tool { color: #77818f; font-style: italic; font-size: 14px; }
+      .name { color: #7ee787; font-weight: 600; }
+      .field { color: #b6bcc6; }
+      .cursor { color: #f2f4f7; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="denue-demo"
+      data-start="0"
+      data-width="960"
+      data-height="540"
+      data-duration="8.5"
+    >
+      <section id="scene" class="clip" data-start="0" data-duration="8.5" data-track-index="1">
+        <div id="card">
+          <div id="titlebar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span id="titletext">denue-mcp — Claude</span>
+          </div>
+          <div id="body">
+            <div id="l-prompt" class="line prompt">&gt; ¿qué farmacias hay en Jalisco?</div>
+            <div id="l-tool" class="line tool">→ denue_buscar_por_estado("farmacia", "Jalisco")</div>
+            <div id="l-gap1" class="line">&nbsp;</div>
+            <div id="l-name1" class="line name">- PV ARCOS LUROLA (id: 1963523)</div>
+            <div id="l-f1a" class="line field">&nbsp;&nbsp;Actividad: Farmacias sin minisúper</div>
+            <div id="l-f1b" class="line field">&nbsp;&nbsp;Dirección: CALLE MORELOS 291 CENTRO 48300 PUERTO VALLARTA, Puerto Vallarta, JALISCO</div>
+            <div id="l-f1c" class="line field">&nbsp;&nbsp;Teléfono: N/D</div>
+            <div id="l-f1d" class="line field">&nbsp;&nbsp;Coordenadas: 20.60831764, -105.23612503</div>
+            <div id="l-gap2" class="line">&nbsp;</div>
+            <div id="l-name2" class="line name">- PV INSUERGENTES LUROLA (id: 1963298)</div>
+            <div id="l-f2a" class="line field">&nbsp;&nbsp;Actividad: Farmacias sin minisúper</div>
+            <div id="l-f2b" class="line field">&nbsp;&nbsp;Dirección: CALLE BASILIO BADILLO 344 EMILIANO ZAPATA, Puerto Vallarta, JALISCO<span id="cursor" class="cursor">▋</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      function reveal(id, t) {
+        tl.fromTo("#" + id, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, t);
+      }
+
+      reveal("l-prompt", 0.5);
+      reveal("l-tool", 1.15);
+      reveal("l-name1", 2.0);
+      reveal("l-f1a", 2.35);
+      reveal("l-f1b", 2.65);
+      reveal("l-f1c", 2.95);
+      reveal("l-f1d", 3.2);
+      reveal("l-name2", 4.0);
+      reveal("l-f2a", 4.35);
+      reveal("l-f2b", 4.65);
+
+      tl.set("#cursor", { opacity: 1 }, 5.0);
+      tl.to("#cursor", { opacity: 0, duration: 0.4, repeat: 5, yoyo: true, ease: "none" }, 5.0);
+
+      window.__timelines["denue-demo"] = tl;
+    </script>
+  </body>
+</html>
